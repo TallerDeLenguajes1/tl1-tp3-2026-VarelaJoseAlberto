@@ -68,4 +68,6 @@ Backup of *.doc*
 .history
 .ionide
 
+# ignoracion manueal
+.pdf
 # End of https://www.toptal.com/developers/gitignore/api/executable,visualstudiocode,git,microsoftoffice
