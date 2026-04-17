@@ -2,10 +2,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-// declaracion de funcion para mostrar nombres
+// funcion para mostrar nombres
 void MostrarPersonas(char *nombres[]);
+
 // funcion para buscar nombre por palabra clave
 int BuscaNombrePorPalabra(char *nombre[], char palabra[]);
+
 // funcion para buscar nombre por id(indice)
 void BuscaNombrePorId(char *nombre[], int id);
 
@@ -15,10 +17,10 @@ int main(int argc, char const *argv[])
     char buff[50];            // buffer aux para guardar temporalmente los nombres
     int cantLetraNomb;        // variable que contendra la cantidad de letra del nombre
 
-    int id; // variable para buscar por id
-
+    int id;           // variable para buscar por id
     char palabra[50]; // idem al buff
-    int posicion; // variable donde contendra la posicion encontrada de la funcion buscarpornombre
+    int posicion;     // variable donde contendra la posicion encontrada de la funcion buscarpornombre
+    int opcion;
 
     // bucle para ingresar los nombres de los alumnos
     for (int i = 0; i < 5; i++)
@@ -42,32 +44,58 @@ int main(int argc, char const *argv[])
 
         // copia el contenido del buffer a la memoria reservada
         strcpy(nombreDeAlumnos[i], buff);
-        
+
         // nota si cuando me pida un nombre y solo precione ENTER dicho
         // ENTER se guardara como un nombre mas
     }
 
-    printf("Ingrese ID del alumno (1-5): ");
-    scanf("%d", &id);
-
-    // se resta 1 porque el usuario usa 1-5 pero el vector usa los indices del 0-4
-    BuscarNombre(nombreDeAlumnos, id - 1);
-
-    printf("Ingrese palabra clave: ");
-    fgets(palabra, sizeof(palabra), stdin);
-    palabra[strcspn(palabra, "\n")] = '\0';
-
-    posicion=BuscarNombre(nombreDeAlumnos,palabra);
-
-    if (posicion!=1)
+    // menu
+    do
     {
-        printf("nombre encontrado: %s\n",nombreDeAlumnos[posicion]);
-    }
-    else
-    {
-        printf("no se encontro coincidencia.\n");
-    }
-    
+        printf("\n===== MENU =====\n");
+        printf("1 - Buscar por ID\n");
+        printf("2 - Buscar por nombre\n");
+        printf("0 - Salir\n");
+        printf("Opcion: ");
+        scanf("%d", &opcion);
+        getchar(); // limpiar buffer
+
+        switch (opcion)
+        {
+        case 1:
+            printf("Ingrese ID (1-5): ");
+            scanf("%d", &id);
+            getchar();
+            // se resta 1 porque el usuario usa 1-5
+            // pero el vector usa los indices del 0-4
+            BuscaNombrePorId(nombreDeAlumnos, id - 1);
+            break;
+
+        case 2:
+            printf("Ingrese palabra clave: ");
+            fgets(palabra, sizeof(palabra), stdin);
+            palabra[strcspn(palabra, "\n")] = '\0';
+
+            posicion = BuscaNombrePorPalabra(nombreDeAlumnos, palabra);
+
+            if (posicion != -1)
+            {
+                printf("Nombre encontrado: %s\n", nombreDeAlumnos[posicion]);
+            }
+            else
+            {
+                printf("No se encontro coincidencia.\n");
+            }
+            break;
+
+        case 0:
+            printf("Saliendo...\n");
+            break;
+
+        default:
+            printf("Opcion invalida.\n");
+        }
+    } while (opcion != 0);
 
     // for para liberar la memoria dinamica reservada
     for (int i = 0; i < 5; i++)
@@ -99,11 +127,11 @@ void BuscaNombrePorId(char *nombre[], int id)
     {
         // si no es valido, mostramos mensaje de error
         printf("\nNo se encontro el id buscado\n");
-   }
+    }
 }
 
-//el metodo funciona hasta que encuentra la primera coinsidencia
-// si hay mas de un nombre similar solo tomara el primero que encuentre
+// el metodo funciona hasta que encuentra la primera coinsidencia
+//  si hay mas de un nombre similar solo tomara el primero que encuentre
 int BuscaNombrePorPalabra(char *nombre[], char palabra[])
 {
     for (int i = 0; i < 5; i++)
