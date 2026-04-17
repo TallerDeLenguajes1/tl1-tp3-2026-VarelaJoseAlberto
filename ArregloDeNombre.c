@@ -5,7 +5,7 @@
 // declaracion de funcion para mostrar nombres
 void MostrarPersonas(char *nombres[]);
 // funcion para buscar nombre por id(indice)
-void BuscarNombrePorID(char *nombre[], int id);
+void BuscarNombre(char *nombre[], int id);
 
 int main(int argc, char const *argv[])
 {
@@ -46,7 +46,7 @@ int main(int argc, char const *argv[])
     scanf("%d", &id);
 
     // se resta 1 porque el usuario usa 1-5 pero el vector usa los indices del 0-4
-    BuscarNombrePorID(nombreDeAlumnos, id - 1);
+    BuscarNombre(nombreDeAlumnos, id - 1);
 
     // for para liberar la memoria dinamica reservada
     for (int i = 0; i < 5; i++)
@@ -66,7 +66,7 @@ void MostrarPersonas(char *nombres[])
     }
 }
 
-void BuscarNombrePorID(char *nombre[], int id)
+void BuscarNombre(char *nombre[], int id)
 {
     // validacion que el indice existe
     if (id >= 0 && id < 5)
