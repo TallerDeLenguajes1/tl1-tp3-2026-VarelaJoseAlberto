@@ -5,7 +5,7 @@
 // declaracion de funcion para mostrar nombres
 void MostrarPersonas(char *nombres[]);
 // funcion para buscar nombre por palabra clave
-int BuscarNombrePorPalabra(char *nombre[], char palabra[]);
+int BuscarNombre(char *nombre[], char palabra[]);
 
 int main(int argc, char const *argv[])
 {
@@ -38,7 +38,7 @@ int main(int argc, char const *argv[])
     fgets(palabra, sizeof(palabra), stdin);
     palabra[strcspn(palabra, "\n")] = '\0';
 
-    posicion=BuscarNombrePorPalabra(nombreDeAlumnos,palabra);
+    posicion=BuscarNombre(nombreDeAlumnos,palabra);
 
     if (posicion!=1)
     {
@@ -68,7 +68,7 @@ void MostrarPersonas(char *nombres[])
 
 //el metodo funciona hasta que encuentra la primera coinsidencia
 // si hay mas de un nombre similar solo tomara el primero que encuentre
-int BuscarNombrePorPalabra(char *nombre[], char palabra[])
+int BuscarNombre(char *nombre[], char palabra[])
 {
     for (int i = 0; i < 5; i++)
     {
