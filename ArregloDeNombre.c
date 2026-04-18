@@ -45,8 +45,8 @@ int main(int argc, char const *argv[])
         // copia el contenido del buffer a la memoria reservada
         strcpy(nombreDeAlumnos[i], buff);
 
-        // nota si cuando me pida un nombre y solo precione ENTER dicho
-        // ENTER se guardara como un nombre mas
+        // nota si cuando me pida un nombre y solo precione "ENTER" dicho
+        // "ENTER" se guardara como un nombre mas
     }
 
     // menu
@@ -55,17 +55,42 @@ int main(int argc, char const *argv[])
         printf("\n===== MENU =====\n");
         printf("1 - Buscar por ID\n");
         printf("2 - Buscar por nombre\n");
+        printf("3 - Mostrar todos los alumnos\n");
         printf("0 - Salir\n");
         printf("Opcion: ");
-        scanf("%d", &opcion);
-        getchar(); // limpiar buffer
+        // scanf("%d", &opcion);
+        // getchar(); // limpiar buffer
+        //validez de para control que ingrese unicamente numeros
+        if (scanf("%d", &opcion) != 1)
+        {
+            printf("Entrada invalida. debe ingresar un numero.\n");
+            while (getchar() != '\n')
+                ; // se limpia completamente el buffer de entrada
+                  // porque scanf deja caracteres inválidos si falla
 
+            opcion = -1;
+            continue;
+        }
+
+        while (getchar() != '\n')
+            ; // evita que quede basura en el buffer
         switch (opcion)
         {
         case 1:
             printf("Ingrese ID (1-5): ");
-            scanf("%d", &id);
-            getchar();
+            // error con el scanf que no valida si es un numero o no
+            //  scanf("%d", &id);
+            //  getchar();
+
+            if (scanf("%d", &id) != 1)
+            {
+                printf("Entrada invalida. debe ingresar un numero.\n");
+                while (getchar() != '\n')
+                    ; // evita que quede basura en el buffer
+                opcion = -1;
+                continue;
+            }
+
             // se resta 1 porque el usuario usa 1-5
             // pero el vector usa los indices del 0-4
             BuscaNombrePorId(nombreDeAlumnos, id - 1);
@@ -87,7 +112,10 @@ int main(int argc, char const *argv[])
                 printf("No se encontro coincidencia.\n");
             }
             break;
-
+        case 3:
+            printf("Mostar todos los alumnos\n");
+            MostrarPersonas(nombreDeAlumnos);
+            break;
         case 0:
             printf("Saliendo...\n");
             break;
