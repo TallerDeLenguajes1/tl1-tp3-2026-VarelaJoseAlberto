@@ -2,7 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-// funcion para mostrar nombres
+// declaracion de funciones
+
+//  funcion para mostrar nombres
 void MostrarPersonas(char *nombres[]);
 
 // funcion para buscar nombre por palabra clave
@@ -13,6 +15,7 @@ void BuscaNombrePorId(char *nombre[], int id);
 
 int main(int argc, char const *argv[])
 {
+   
     char *nombreDeAlumnos[5]; // vector de 5 punteros a char (nota: cada uno almacenara un nombre)
     char buff[50];            // buffer aux para guardar temporalmente los nombres
     int cantLetraNomb;        // variable que contendra la cantidad de letra del nombre
@@ -20,17 +23,20 @@ int main(int argc, char const *argv[])
     int id;           // variable para buscar por id
     char palabra[50]; // idem al buff
     int posicion;     // variable donde contendra la posicion encontrada de la funcion buscarpornombre
-    int opcion;
+    int opcion;       // variable donde se guardara la opcion del menu
 
     // bucle para ingresar los nombres de los alumnos
     for (int i = 0; i < 5; i++)
     {
         printf("Ingrese el nombre del Alumno N°%d: ", i + 1);
 
-        // se guarda temporalmento el nombre en el buffer (nota: solo se puede guardar un solo nombre)
+        // se guarda temporalmento el nombre en el buffer
+        // (nota: solo se puede guardar un solo nombre)
         // scanf("%s", buff);
 
         // fgets para guardar mas de un nombre (guarnar nombres seraprados por espacio (barra espaciadora))
+        // algunos caracteres especiales (ñ, tildes, etc.) pueden leerse mal segun la codificacion de la consola
+        // lo cual genera que no se guarde correctamente el nombre por ejemplo si agrego acuña solo se guardara acu
         fgets(buff, sizeof(buff), stdin);
 
         // elimino el salto de linea (ENTER) que guarda el fgets
@@ -45,22 +51,25 @@ int main(int argc, char const *argv[])
         // copia el contenido del buffer a la memoria reservada
         strcpy(nombreDeAlumnos[i], buff);
 
-        // nota si cuando me pida un nombre y solo precione "ENTER" dicho
-        // "ENTER" se guardara como un nombre mas
+        // ? nota: si cuando me pida un nombre y solo precione "ENTER" dicho "ENTER" se guardara como un nombre mas
+        // ? pero lo elimina el strcspn y lo remplaza por el \0
     }
 
     // menu
     do
     {
-        printf("\n===== MENU =====\n");
+        printf("\n========= MENU =========\n");
         printf("1 - Buscar por ID\n");
         printf("2 - Buscar por nombre\n");
-        printf("3 - Mostrar todos los alumnos\n");
+        printf("3 - Listar todos los alumnos\n");
         printf("0 - Salir\n");
+        printf("========================\n");
         printf("Opcion: ");
+
         // scanf("%d", &opcion);
         // getchar(); // limpiar buffer
-        //validez de para control que ingrese unicamente numeros
+
+        // validez de para control que ingrese unicamente numeros
         if (scanf("%d", &opcion) != 1)
         {
             printf("Entrada invalida. debe ingresar un numero.\n");
@@ -74,14 +83,17 @@ int main(int argc, char const *argv[])
 
         while (getchar() != '\n')
             ; // evita que quede basura en el buffer
+
+        // opciones del menu
         switch (opcion)
         {
         case 1:
             printf("Ingrese ID (1-5): ");
-            // error con el scanf que no valida si es un numero o no
+            //  error con el scanf que no valida si es un numero o no
             //  scanf("%d", &id);
             //  getchar();
 
+            // validez de para control que ingrese unicamente numeros
             if (scanf("%d", &id) != 1)
             {
                 printf("Entrada invalida. debe ingresar un numero.\n");
@@ -91,8 +103,7 @@ int main(int argc, char const *argv[])
                 continue;
             }
 
-            // se resta 1 porque el usuario usa 1-5
-            // pero el vector usa los indices del 0-4
+            // se resta 1 porque el usuario usa 1-5 pero el vector usa los indices del 0-4
             BuscaNombrePorId(nombreDeAlumnos, id - 1);
             break;
 
@@ -111,11 +122,15 @@ int main(int argc, char const *argv[])
             {
                 printf("No se encontro coincidencia.\n");
             }
+
             break;
+
         case 3:
-            printf("Mostar todos los alumnos\n");
+            printf("\nLista de alumnos:\n");
             MostrarPersonas(nombreDeAlumnos);
+
             break;
+
         case 0:
             printf("Saliendo...\n");
             break;
@@ -123,6 +138,7 @@ int main(int argc, char const *argv[])
         default:
             printf("Opcion invalida.\n");
         }
+
     } while (opcion != 0);
 
     // for para liberar la memoria dinamica reservada
@@ -134,12 +150,14 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
+// desarrollo de funciones
+
 void MostrarPersonas(char *nombres[])
 {
     printf("\n");
     for (int i = 0; i < 5; i++)
     {
-        printf("Nombre del alumno N°%d: %s\n", i + 1, nombres[i]);
+        printf("Alumno N°%d: %s\n", i + 1, nombres[i]);
     }
 }
 
@@ -158,8 +176,7 @@ void BuscaNombrePorId(char *nombre[], int id)
     }
 }
 
-// el metodo funciona hasta que encuentra la primera coinsidencia
-//  si hay mas de un nombre similar solo tomara el primero que encuentre
+// el metodo funciona devolviendo la primera coincidencia encontrada e ignora las siguientes
 int BuscaNombrePorPalabra(char *nombre[], char palabra[])
 {
     for (int i = 0; i < 5; i++)
@@ -169,6 +186,5 @@ int BuscaNombrePorPalabra(char *nombre[], char palabra[])
             return i; // devuelde la posicion encontrada
         }
     }
-
     return -1; // no encontro coincidencia
 }
