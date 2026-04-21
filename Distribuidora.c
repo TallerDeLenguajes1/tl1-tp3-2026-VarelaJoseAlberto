@@ -26,6 +26,7 @@ typedef struct
 
 int main(int argc, char const *argv[])
 {
+    srand(time(NULL));
 
     int cantidadClientes; // cantidad de clientes que vamos a tenes
     Cliente *clientes;    // puntero a la estructura del cliente
@@ -55,13 +56,17 @@ int main(int argc, char const *argv[])
 
         clientes[i].ClienteID = i + 1;
         clientes[i].NombreCliente = malloc(strlen(buff) + 1);
+       
+        clientes[i].CantidadProductosAPedir=rand()%5+1;
+        clientes[i].Productos=malloc(sizeof(Producto)*clientes[i].CantidadProductosAPedir);
 
         strcpy(clientes[i].NombreCliente, buff);
     }
 
     for (int i = 0; i < cantidadClientes; i++)
     {
-        printf("id: %d - nombre: %s\n", clientes[i].ClienteID, clientes[i].NombreCliente);
+        printf("id: %d\n  nombre: %s\n  cantproductos: %d\n",
+             clientes[i].ClienteID, clientes[i].NombreCliente, clientes[i].CantidadProductosAPedir);
     }
 
     for (int i = 0; i < cantidadClientes; i++)
