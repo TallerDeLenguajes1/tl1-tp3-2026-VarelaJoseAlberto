@@ -27,7 +27,48 @@ typedef struct
 int main(int argc, char const *argv[])
 {
 
-    printf("hola mundo");
+    int cantidadClientes; // cantidad de clientes que vamos a tenes
+    Cliente *clientes;    // puntero a la estructura del cliente
+    char buff[50];        // aux para almacenar temporalmente un nombre
+
+    printf("Ingrese la cantidad de clientes: ");
+    while (scanf("%d", &cantidadClientes) != 1 || cantidadClientes <= 0)
+    {
+        printf("Error. Ingrese solo numeros...\n");
+        while (getchar() != '\n')
+            ;
+    }
+    while (getchar() != '\n')
+        ; // limpia el ENTER pendiente
+
+    clientes = malloc(sizeof(Cliente) * cantidadClientes);
+
+    printf("Se reservaron %d clientes.\n", cantidadClientes);
+
+    for (int i = 0; i < cantidadClientes; i++)
+    {
+
+        printf("Ingrese el nombre del cliente N° %d: ", i + 1);
+
+        fgets(buff, sizeof(buff), stdin);
+        buff[strcspn(buff, "\n")] = '\0';
+
+        clientes[i].ClienteID = i + 1;
+        clientes[i].NombreCliente = malloc(strlen(buff) + 1);
+
+        strcpy(clientes[i].NombreCliente, buff);
+    }
+
+    for (int i = 0; i < cantidadClientes; i++)
+    {
+        printf("id: %d - nombre: %s\n", clientes[i].ClienteID, clientes[i].NombreCliente);
+    }
+
+    for (int i = 0; i < cantidadClientes; i++)
+    {
+        free(clientes[i].NombreCliente);
+    }
+    free(clientes);
 
     return 0;
 }
