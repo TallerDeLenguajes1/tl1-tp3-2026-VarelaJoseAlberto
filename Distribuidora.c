@@ -25,7 +25,15 @@ typedef struct
 } Cliente;
 
 // declaracion de funciones
-float calcularCostoTotal(Producto p);
+
+// funcion para calcular el costo total de los productos
+float CalcularCostoTotal(Producto p);
+
+// funcion para cargar clientes y generar productos
+void CargarClientes(Cliente *clientes, int cantidadClientes);
+
+// funcion para mostrar los datos
+void MostrarCliente(Cliente *clientes, int cantidadClientes);
 
 int main(int argc, char const *argv[])
 {
@@ -33,7 +41,6 @@ int main(int argc, char const *argv[])
 
     int cantidadClientes; // cantidad de clientes que vamos a tenes
     Cliente *clientes;    // puntero a la estructura del cliente
-    char buff[50];        // aux para almacenar temporalmente un nombre
 
     // cantidad de clientes
     printf("Ingrese la cantidad de clientes: ");
@@ -50,6 +57,30 @@ int main(int argc, char const *argv[])
     clientes = malloc(sizeof(Cliente) * cantidadClientes);
 
     // carga de datos del cliente
+    CargarClientes(clientes, cantidadClientes);
+
+    // mostrar datos
+    MostrarCliente(clientes, cantidadClientes);
+
+    for (int i = 0; i < cantidadClientes; i++)
+    {
+        free(clientes[i].NombreCliente);
+        free(clientes[i].Productos);
+    }
+
+    free(clientes);
+
+    return 0;
+}
+
+float CalcularCostoTotal(Producto p)
+{
+    return p.Cantidad * p.PrecioUnitario;
+}
+
+void CargarClientes(Cliente *clientes, int cantidadClientes)
+{
+    char buff[50]; // aux para almacenar temporalmente un nombre
     for (int i = 0; i < cantidadClientes; i++)
     {
 
@@ -79,8 +110,10 @@ int main(int argc, char const *argv[])
             clientes[i].Productos[j].PrecioUnitario = (rand() % 91 + 10);
         }
     }
+}
 
-    // mostrar datos
+void MostrarCliente(Cliente *clientes, int cantidadClientes)
+{
     for (int i = 0; i < cantidadClientes; i++)
     {
         float totalAPagar = 0;
@@ -94,7 +127,7 @@ int main(int argc, char const *argv[])
         {
             Producto p = clientes[i].Productos[j];
 
-            float subtotal = calcularCostoTotal(p);
+            float subtotal = CalcularCostoTotal(p);
             totalAPagar += subtotal;
 
             printf("|  %2d  | %-11s | $%.2f | $%.2f\n",
@@ -107,19 +140,4 @@ int main(int argc, char const *argv[])
         printf("| Total a pagar:                        $ %.2f\n", totalAPagar);
         printf("|================================================\n");
     }
-
-    for (int i = 0; i < cantidadClientes; i++)
-    {
-        free(clientes[i].NombreCliente);
-        free(clientes[i].Productos);
-    }
-
-    free(clientes);
-
-    return 0;
-}
-
-float calcularCostoTotal(Producto p)
-{
-    return p.Cantidad * p.PrecioUnitario;
 }
