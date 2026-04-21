@@ -24,6 +24,9 @@ typedef struct
 
 } Cliente;
 
+// declaracion de funciones
+float calcularCostoTotal(Producto p);
+
 int main(int argc, char const *argv[])
 {
     srand(time(NULL)); // inicio una semilla para generar diferentes numeros al alzar
@@ -69,24 +72,27 @@ int main(int argc, char const *argv[])
             int indiceTipo = rand() % 5;
             clientes[i].Productos[j].TipoProducto = TiposProductos[indiceTipo];
 
-            clientes[i].Productos[j].PrecioUnitario = (float)(rand() % 91 + 10);
-
+            clientes[i].Productos[j].PrecioUnitario = (rand() % 91 + 10);
         }
     }
 
     for (int i = 0; i < cantidadClientes; i++)
     {
+        float totalAPagar = 0;
         printf("id: %d\n  nombre: %s\n  cantproductos: %d\n",
                clientes[i].ClienteID, clientes[i].NombreCliente, clientes[i].CantidadProductosAPedir);
-    
-    for (int j = 0; j < clientes[i].CantidadProductosAPedir; j++)
-    {
-        Producto p =clientes[i].Productos[j];
-        printf("%s %d $%f\n", 
-                   p.TipoProducto, p.Cantidad, p.PrecioUnitario);
+
+        for (int j = 0; j < clientes[i].CantidadProductosAPedir; j++)
+        {
+            Producto p = clientes[i].Productos[j];
+            float subtotal = calcularCostoTotal(p);
+            totalAPagar += subtotal;
+            printf("  Producto: %s | Cant: %d | Precio: %.2f | Subtotal: %.2f\n",
+                  p.TipoProducto, p.Cantidad, p.PrecioUnitario, subtotal);
+        }
+        printf("Total a pagar: %.2f\n\n", totalAPagar);
     }
     
-            }
 
     for (int i = 0; i < cantidadClientes; i++)
     {
@@ -97,7 +103,13 @@ int main(int argc, char const *argv[])
     {
         free(clientes[i].Productos);
     }
+
     free(clientes);
 
     return 0;
+}
+
+float calcularCostoTotal(Producto p)
+{
+    return p.Cantidad * p.PrecioUnitario;
 }
