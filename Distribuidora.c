@@ -26,7 +26,7 @@ typedef struct
 
 int main(int argc, char const *argv[])
 {
-    srand(time(NULL));
+    srand(time(NULL)); // inicio una semilla para generar diferentes numeros al alzar
 
     int cantidadClientes; // cantidad de clientes que vamos a tenes
     Cliente *clientes;    // puntero a la estructura del cliente
@@ -52,26 +52,50 @@ int main(int argc, char const *argv[])
         printf("Ingrese el nombre del cliente N° %d: ", i + 1);
 
         fgets(buff, sizeof(buff), stdin);
-        buff[strcspn(buff, "\n")] = '\0';
+        buff[strcspn(buff, "\n")] = '\0'; // quito el salto de linea (ENTER)
 
         clientes[i].ClienteID = i + 1;
         clientes[i].NombreCliente = malloc(strlen(buff) + 1);
-       
-        clientes[i].CantidadProductosAPedir=rand()%5+1;
-        clientes[i].Productos=malloc(sizeof(Producto)*clientes[i].CantidadProductosAPedir);
-
         strcpy(clientes[i].NombreCliente, buff);
+
+        clientes[i].CantidadProductosAPedir = rand() % 5 + 1;
+        clientes[i].Productos = malloc(sizeof(Producto) * clientes[i].CantidadProductosAPedir);
+
+        for (int j = 0; j < clientes[i].CantidadProductosAPedir; j++)
+        {
+            clientes[i].Productos[j].ProductoID = j + 1;
+            clientes[i].Productos[j].Cantidad = rand() % 10 + 1;
+
+            int indiceTipo = rand() % 5;
+            clientes[i].Productos[j].TipoProducto = TiposProductos[indiceTipo];
+
+            clientes[i].Productos[j].PrecioUnitario = (float)(rand() % 91 + 10);
+
+        }
     }
 
     for (int i = 0; i < cantidadClientes; i++)
     {
         printf("id: %d\n  nombre: %s\n  cantproductos: %d\n",
-             clientes[i].ClienteID, clientes[i].NombreCliente, clientes[i].CantidadProductosAPedir);
+               clientes[i].ClienteID, clientes[i].NombreCliente, clientes[i].CantidadProductosAPedir);
+    
+    for (int j = 0; j < clientes[i].CantidadProductosAPedir; j++)
+    {
+        Producto p =clientes[i].Productos[j];
+        printf("%s %d $%f\n", 
+                   p.TipoProducto, p.Cantidad, p.PrecioUnitario);
     }
+    
+            }
 
     for (int i = 0; i < cantidadClientes; i++)
     {
         free(clientes[i].NombreCliente);
+    }
+
+    for (int i = 0; i < cantidadClientes; i++)
+    {
+        free(clientes[i].Productos);
     }
     free(clientes);
 
