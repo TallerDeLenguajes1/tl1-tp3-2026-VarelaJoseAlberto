@@ -35,6 +35,7 @@ int main(int argc, char const *argv[])
     Cliente *clientes;    // puntero a la estructura del cliente
     char buff[50];        // aux para almacenar temporalmente un nombre
 
+    // cantidad de clientes
     printf("Ingrese la cantidad de clientes: ");
     while (scanf("%d", &cantidadClientes) != 1 || cantidadClientes <= 0)
     {
@@ -45,10 +46,10 @@ int main(int argc, char const *argv[])
     while (getchar() != '\n')
         ; // limpia el ENTER pendiente
 
+    // reserva de memoria para los clientes
     clientes = malloc(sizeof(Cliente) * cantidadClientes);
 
-    printf("Se reservaron %d clientes.\n", cantidadClientes);
-
+    // carga de datos del cliente
     for (int i = 0; i < cantidadClientes; i++)
     {
 
@@ -58,12 +59,15 @@ int main(int argc, char const *argv[])
         buff[strcspn(buff, "\n")] = '\0'; // quito el salto de linea (ENTER)
 
         clientes[i].ClienteID = i + 1;
+
         clientes[i].NombreCliente = malloc(strlen(buff) + 1);
         strcpy(clientes[i].NombreCliente, buff);
 
         clientes[i].CantidadProductosAPedir = rand() % 5 + 1;
+
         clientes[i].Productos = malloc(sizeof(Producto) * clientes[i].CantidadProductosAPedir);
 
+        // productos
         for (int j = 0; j < clientes[i].CantidadProductosAPedir; j++)
         {
             clientes[i].Productos[j].ProductoID = j + 1;
@@ -76,31 +80,37 @@ int main(int argc, char const *argv[])
         }
     }
 
+    // mostrar datos
     for (int i = 0; i < cantidadClientes; i++)
     {
         float totalAPagar = 0;
-        printf("id: %d\n  nombre: %s\n  cantproductos: %d\n",
-               clientes[i].ClienteID, clientes[i].NombreCliente, clientes[i].CantidadProductosAPedir);
-
+        printf("\n|================================================\n");
+        printf("| Cliente ID: %d\n", clientes[i].ClienteID);
+        printf("| Nombre: %s\n", clientes[i].NombreCliente);
+        printf("| Cantidad de productos: %d\n", clientes[i].CantidadProductosAPedir);
+        printf("|------------------------------------------------\n");
+        printf("| Cant | Producto    | Precio | Subtotal\n");
         for (int j = 0; j < clientes[i].CantidadProductosAPedir; j++)
         {
             Producto p = clientes[i].Productos[j];
+
             float subtotal = calcularCostoTotal(p);
             totalAPagar += subtotal;
-            printf("  Producto: %s | Cant: %d | Precio: %.2f | Subtotal: %.2f\n",
-                  p.TipoProducto, p.Cantidad, p.PrecioUnitario, subtotal);
+
+            printf("|  %2d  | %-11s | $%.2f | $%.2f\n",
+                   p.Cantidad,
+                   p.TipoProducto,
+                   p.PrecioUnitario,
+                   subtotal);
         }
-        printf("Total a pagar: %.2f\n\n", totalAPagar);
+        printf("|------------------------------------------------\n");
+        printf("| Total a pagar:                        $ %.2f\n", totalAPagar);
+        printf("|================================================\n");
     }
-    
 
     for (int i = 0; i < cantidadClientes; i++)
     {
         free(clientes[i].NombreCliente);
-    }
-
-    for (int i = 0; i < cantidadClientes; i++)
-    {
         free(clientes[i].Productos);
     }
 
